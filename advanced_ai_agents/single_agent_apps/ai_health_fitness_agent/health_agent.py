@@ -87,21 +87,16 @@ def main():
         </div>
     """, unsafe_allow_html=True)
 
-    with st.sidebar:
-        st.header("🔑 API Configuration")
-        gemini_api_key = st.text_input(
-            "Gemini API Key",
-            type="password",
-            help="Enter your Gemini API key to access the service"
-        )
-        
-        if not gemini_api_key:
-            st.warning("⚠️ Please enter your Gemini API Key to proceed")
-            st.markdown("[Get your API key here](https://aistudio.google.com/apikey)")
-            return
-        
-        st.success("API Key accepted!")
+try:
+    gemini_api_key = st.secrets["GOOGLE_API_KEY"]
+except KeyError:
+    st.error("⚠️ API key not configured. Please contact the app administrator.")
+    st.stop()
 
+with st.sidebar:
+    st.header("ℹ️ About This App")
+    st.success("✅ AI Health & Fitness Planner Ready!")
+    st.info("This app uses AI to create personalized health and fitness plans tailored to your goals.")
     if gemini_api_key:
         try:
             gemini_model = Gemini(id="gemini-2.5-flash-preview-05-20", api_key=gemini_api_key)
